@@ -1,0 +1,38 @@
+import { StringFilter } from "../../util/StringFilter";
+import { StringNullableFilter } from "../../util/StringNullableFilter";
+import { DateTimeNullableFilter } from "../../util/DateTimeNullableFilter";
+import { BooleanNullableFilter } from "../../util/BooleanNullableFilter";
+import { JsonFilter } from "../../util/JsonFilter";
+import { UserProfileListRelationFilter } from "../userProfile/UserProfileListRelationFilter";
+import { UserSessionListRelationFilter } from "../userSession/UserSessionListRelationFilter";
+import { UserRoleListRelationFilter } from "../userRole/UserRoleListRelationFilter";
+import { WebSocketListRelationFilter } from "../webSocket/WebSocketListRelationFilter";
+import { ApiKeyListRelationFilter } from "../apiKey/ApiKeyListRelationFilter";
+import { SubscriptionListRelationFilter } from "../subscription/SubscriptionListRelationFilter";
+import { AnalyticsEventListRelationFilter } from "../analyticsEvent/AnalyticsEventListRelationFilter";
+import { AuditLogListRelationFilter } from "../auditLog/AuditLogListRelationFilter";
+import { NotificationListRelationFilter } from "../notification/NotificationListRelationFilter";
+
+export type UserWhereInput = {
+  id?: StringFilter;
+  firstName?: StringNullableFilter;
+  lastName?: StringNullableFilter;
+  username?: StringFilter;
+  email?: StringNullableFilter;
+  phoneNumber?: StringNullableFilter;
+  lastLogin?: DateTimeNullableFilter;
+  isActive?: BooleanNullableFilter;
+  profilePicture?: JsonFilter;
+  twoFactorEnabled?: BooleanNullableFilter;
+  preferredLanguage?: StringNullableFilter;
+  timezone?: StringNullableFilter;
+  userProfiles?: UserProfileListRelationFilter;
+  userSessions?: UserSessionListRelationFilter;
+  userRoles?: UserRoleListRelationFilter;
+  webSockets?: WebSocketListRelationFilter;
+  apiKeys?: ApiKeyListRelationFilter;
+  subscriptions?: SubscriptionListRelationFilter;
+  analyticsEvents?: AnalyticsEventListRelationFilter;
+  auditLogs?: AuditLogListRelationFilter;
+  notifications?: NotificationListRelationFilter;
+};

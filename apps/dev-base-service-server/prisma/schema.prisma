@@ -1,0 +1,519 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Collection {
+  id              String           @id @default(cuid())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  description     String?
+  schema          Json?
+  isSchemaless    Boolean?
+  version         Int?
+  isPublic        Boolean?
+  indices         Index[]
+  owner           String?
+  documents       Document[]
+  schemata        Schema[]
+  subscriptions   Subscription[]
+  analyticsEvents AnalyticsEvent[]
+}
+
+model Query {
+  id            String         @id @default(cuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  subscriptions Subscription[]
+  queryCaches   QueryCache[]
+}
+
+model Backup {
+  id            String         @id @default(cuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  restorePoints RestorePoint[]
+}
+
+model Role {
+  id             String          @id @default(cuid())
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  userRoles      UserRole[]
+  accessControls AccessControl[]
+}
+
+model Webhook {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Analytics {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id                String           @id @default(cuid())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  firstName         String?
+  lastName          String?
+  username          String           @unique
+  email             String?          @unique
+  password          String
+  roles             Json
+  phoneNumber       String?
+  lastLogin         DateTime?
+  isActive          Boolean?
+  profilePicture    Json?
+  twoFactorEnabled  Boolean?
+  preferredLanguage String?
+  timezone          String?
+  userProfiles      UserProfile[]
+  userSessions      UserSession[]
+  userRoles         UserRole[]
+  webSockets        WebSocket[]
+  apiKeys           ApiKey[]
+  subscriptions     Subscription[]
+  analyticsEvents   AnalyticsEvent[]
+  auditLogs         AuditLog[]
+  notifications     Notification[]
+}
+
+model UserRole {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  assignedAt DateTime?
+  assignedBy String?
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?
+  role       Role?     @relation(fields: [roleId], references: [id])
+  roleId     String?
+}
+
+model UserProfile {
+  id          String                  @id @default(cuid())
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  bio         String?
+  location    String?
+  website     String?
+  socialLinks Json?
+  skills      EnumUserProfileSkills[]
+  experience  Json?
+  user        User?                   @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model UserSession {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deviceInfo Json?
+  token      String?
+  ipAddress  String?
+  startTime  DateTime?
+  endTime    DateTime?
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?
+}
+
+model Schema {
+  id           String       @id @default(cuid())
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  version      Int?
+  definition   Json?
+  collection   Collection?  @relation(fields: [collectionId], references: [id])
+  collectionId String?
+  fields       FieldModel[]
+}
+
+model Document {
+  id           String      @id @default(cuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  data         Json?
+  version      Int?
+  createdBy    String?
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId String?
+}
+
+model FieldModel {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String?
+  typeField    String?
+  isRequired   Boolean?
+  defaultValue Json?
+  constraints  Json?
+  schema       Schema?  @relation(fields: [schemaId], references: [id])
+  schemaId     String?
+}
+
+model Index {
+  id           String      @id @default(cuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  name         String?
+  fields       Json?
+  isUnique     Boolean?
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId String?
+}
+
+model Subscription {
+  id           String      @id @default(cuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  event        String?
+  user         User?       @relation(fields: [userId], references: [id])
+  userId       String?
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId String?
+  query        Query?      @relation(fields: [queryId], references: [id])
+  queryId      String?
+}
+
+model Endpoint {
+  id                String             @id @default(cuid())
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  path              String?
+  method            String?
+  description       String?
+  authentication    Boolean?
+  rateLimit         Int?
+  apiDocumentations ApiDocumentation[]
+}
+
+model ApiKey {
+  id        String             @id @default(cuid())
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  key       String?
+  name      String?
+  scopes    EnumApiKeyScopes[]
+  expiresAt DateTime?
+  lastUsed  DateTime?
+  rateLimit Int?
+  user      User?              @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model WebSocket {
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  disconnectedAt DateTime?
+  connectionId   String?
+  status         String?
+  connectedAt    DateTime?
+  user           User?     @relation(fields: [userId], references: [id])
+  userId         String?
+}
+
+model Event {
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  typeField      String?
+  data           Json?
+  timestamp      DateTime?
+  originatorId   String?
+  originatorType String?
+}
+
+model AnalyticsEvent {
+  id           String      @id @default(cuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  eventType    String?
+  eventData    Json?
+  timestamp    DateTime?
+  context      Json?
+  user         User?       @relation(fields: [userId], references: [id])
+  userId       String?
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId String?
+}
+
+model Dashboard {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String?
+  layout    Json?
+  isPublic  Boolean?
+  owner     String?
+  widgets   Widget[]
+}
+
+model PerformanceMetric {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  metricName String?
+  value      Int?
+  timestamp  DateTime?
+  context    Json?
+}
+
+model Widget {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  typeField   String?
+  configField Json?
+  position    Json?
+  dashboard   Dashboard? @relation(fields: [dashboardId], references: [id])
+  dashboardId String?
+}
+
+model CloudFunction {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  name         String?
+  runtime      String?
+  trigger      String?
+  lastExecuted DateTime?
+  environment  Json?
+  timeout      Int?
+  memorySize   Int?
+  code         String?
+  version      Int?
+}
+
+model Plugin {
+  id                   String    @id @default(cuid())
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  version              Int?
+  description          String?
+  entryPoint           String?
+  configField          Json?
+  isActive             Boolean?
+  installedAt          DateTime?
+  name                 String?
+  pluginVersion        Int?
+  configuration        Json?
+  updatedOn            DateTime?
+  pluginEntryPoint     String?
+  pluginConfiguration  Json?
+  pluginIsActive       Boolean?
+  pluginName           String?
+  pluginDescription    String?
+  pluginInstalledAt    DateTime?
+  pluginUpdatedAt      DateTime?
+  pluginDesc           String?
+  pluginInstalled      DateTime?
+  pluginVer            Int?
+  pluginEntry          String?
+  pluginConf           Json?
+  pluginActive         Boolean?
+  pluginUpdated        DateTime?
+  pluginVerField       Int?
+  pluginDescField      String?
+  pluginEntryField     String?
+  pluginConfField      Json?
+  pluginInstalledField DateTime?
+  pluginActiveField    Boolean?
+  pluginUpdatedField   DateTime?
+  pluginNameField      String?
+}
+
+model AuditLog {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  actionType String?
+  entityType String?
+  changes    Json?
+  timestamp  DateTime?
+  ipAddress  String?
+  entity     String?
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?
+}
+
+model AccessControl {
+  id                String   @id @default(cuid())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  resourceType      String?
+  permissions       Json?
+  resource          String?
+  role              Role?    @relation(fields: [roleId], references: [id])
+  roleId            String?
+  resourceTypeField String?
+  permissionsField  Json?
+  resourceField     String?
+  roleField         String?
+}
+
+model EncryptionKey {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  purpose      String?
+  algorithm    String?
+  key          String?
+  rotatedAt    DateTime?
+  status       String?
+  encPurpose   String?
+  encAlgorithm String?
+  encKey       String?
+  encCreatedAt DateTime?
+  encStatus    String?
+  encRotatedAt DateTime?
+}
+
+model BackupSchedule {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  nextBackup  DateTime?
+  configField Json?
+  frequency   String?
+  lastBackup  DateTime?
+  retention   String?
+}
+
+model RestorePoint {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  startTime  DateTime?
+  backup     Backup?   @relation(fields: [backupId], references: [id])
+  backupId   String?
+  status     String?
+  endTime    DateTime?
+  restoredBy String?
+}
+
+model Cache {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  key          String?
+  value        Json?
+  ttl          Int?
+  lastAccessed DateTime?
+}
+
+model QueryCache {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  result    Json?
+  expiresAt DateTime?
+  query     Query?    @relation(fields: [queryId], references: [id])
+  queryId   String?
+}
+
+model RateLimiter {
+  id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  resourceType String?
+  resource     String?
+  limit        Int?
+  window       Int?
+  current      Int?
+  lastReset    DateTime?
+}
+
+model Migration {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  name        String?
+  description String?
+  appliedAt   DateTime?
+  version     Int?
+  status      String?
+}
+
+model ChangeLog {
+  id              String    @id @default(cuid())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  entityType      String?
+  changes         Json?
+  entity          String?
+  changeType      String?
+  version         Int?
+  createdBy       String?
+  entityTypeField String?
+  versionField    Int?
+  entityField     String?
+  changeTypeField String?
+  createdByField  String?
+  createdAtField  DateTime?
+  changesField    Json?
+}
+
+model Notification {
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  typeField      String?
+  content        Json?
+  isRead         Boolean?
+  createdAtField DateTime?
+  user           User?     @relation(fields: [userId], references: [id])
+  userId         String?
+}
+
+model Alert {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  createdBy     String?
+  condition     Json?
+  action        Json?
+  status        String?
+  lastTriggered DateTime?
+}
+
+model ApiDocumentation {
+  id             String    @id @default(cuid())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  version        Int?
+  updatedAtField DateTime?
+  content        Json?
+  createdAtField DateTime?
+  endpoint       Endpoint? @relation(fields: [endpointId], references: [id])
+  endpointId     String?
+}
+
+model Metadata {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  dataType    String?
+  entityType  String?
+  entityField String?
+  key         String?
+  value       Json?
+}
+
+enum EnumUserProfileSkills {
+  Option1
+}
+
+enum EnumApiKeyScopes {
+  Option1
+}

@@ -1,0 +1,37 @@
+import { JsonValue } from "type-fest";
+import { UserProfile } from "../userProfile/UserProfile";
+import { UserSession } from "../userSession/UserSession";
+import { UserRole } from "../userRole/UserRole";
+import { WebSocket } from "../webSocket/WebSocket";
+import { ApiKey } from "../apiKey/ApiKey";
+import { Subscription } from "../subscription/Subscription";
+import { AnalyticsEvent } from "../analyticsEvent/AnalyticsEvent";
+import { AuditLog } from "../auditLog/AuditLog";
+import { Notification } from "../notification/Notification";
+
+export type User = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  firstName: string | null;
+  lastName: string | null;
+  username: string;
+  email: string | null;
+  roles: JsonValue;
+  phoneNumber: string | null;
+  lastLogin: Date | null;
+  isActive: boolean | null;
+  profilePicture: JsonValue;
+  twoFactorEnabled: boolean | null;
+  preferredLanguage: string | null;
+  timezone: string | null;
+  userProfiles?: Array<UserProfile>;
+  userSessions?: Array<UserSession>;
+  userRoles?: Array<UserRole>;
+  webSockets?: Array<WebSocket>;
+  apiKeys?: Array<ApiKey>;
+  subscriptions?: Array<Subscription>;
+  analyticsEvents?: Array<AnalyticsEvent>;
+  auditLogs?: Array<AuditLog>;
+  notifications?: Array<Notification>;
+};
