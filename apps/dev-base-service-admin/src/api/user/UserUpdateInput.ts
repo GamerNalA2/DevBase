@@ -1,0 +1,35 @@
+import { InputJsonValue } from "../../types";
+import { UserProfileUpdateManyWithoutUsersInput } from "./UserProfileUpdateManyWithoutUsersInput";
+import { UserSessionUpdateManyWithoutUsersInput } from "./UserSessionUpdateManyWithoutUsersInput";
+import { UserRoleUpdateManyWithoutUsersInput } from "./UserRoleUpdateManyWithoutUsersInput";
+import { WebSocketUpdateManyWithoutUsersInput } from "./WebSocketUpdateManyWithoutUsersInput";
+import { ApiKeyUpdateManyWithoutUsersInput } from "./ApiKeyUpdateManyWithoutUsersInput";
+import { SubscriptionUpdateManyWithoutUsersInput } from "./SubscriptionUpdateManyWithoutUsersInput";
+import { AnalyticsEventUpdateManyWithoutUsersInput } from "./AnalyticsEventUpdateManyWithoutUsersInput";
+import { AuditLogUpdateManyWithoutUsersInput } from "./AuditLogUpdateManyWithoutUsersInput";
+import { NotificationUpdateManyWithoutUsersInput } from "./NotificationUpdateManyWithoutUsersInput";
+
+export type UserUpdateInput = {
+  firstName?: string | null;
+  lastName?: string | null;
+  username?: string;
+  email?: string | null;
+  password?: string;
+  roles?: InputJsonValue;
+  phoneNumber?: string | null;
+  lastLogin?: Date | null;
+  isActive?: boolean | null;
+  profilePicture?: InputJsonValue;
+  twoFactorEnabled?: boolean | null;
+  preferredLanguage?: string | null;
+  timezone?: string | null;
+  userProfiles?: UserProfileUpdateManyWithoutUsersInput;
+  userSessions?: UserSessionUpdateManyWithoutUsersInput;
+  userRoles?: UserRoleUpdateManyWithoutUsersInput;
+  webSockets?: WebSocketUpdateManyWithoutUsersInput;
+  apiKeys?: ApiKeyUpdateManyWithoutUsersInput;
+  subscriptions?: SubscriptionUpdateManyWithoutUsersInput;
+  analyticsEvents?: AnalyticsEventUpdateManyWithoutUsersInput;
+  auditLogs?: AuditLogUpdateManyWithoutUsersInput;
+  notifications?: NotificationUpdateManyWithoutUsersInput;
+};

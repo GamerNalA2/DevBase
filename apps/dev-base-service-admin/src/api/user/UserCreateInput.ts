@@ -1,0 +1,35 @@
+import { InputJsonValue } from "../../types";
+import { UserProfileCreateNestedManyWithoutUsersInput } from "./UserProfileCreateNestedManyWithoutUsersInput";
+import { UserSessionCreateNestedManyWithoutUsersInput } from "./UserSessionCreateNestedManyWithoutUsersInput";
+import { UserRoleCreateNestedManyWithoutUsersInput } from "./UserRoleCreateNestedManyWithoutUsersInput";
+import { WebSocketCreateNestedManyWithoutUsersInput } from "./WebSocketCreateNestedManyWithoutUsersInput";
+import { ApiKeyCreateNestedManyWithoutUsersInput } from "./ApiKeyCreateNestedManyWithoutUsersInput";
+import { SubscriptionCreateNestedManyWithoutUsersInput } from "./SubscriptionCreateNestedManyWithoutUsersInput";
+import { AnalyticsEventCreateNestedManyWithoutUsersInput } from "./AnalyticsEventCreateNestedManyWithoutUsersInput";
+import { AuditLogCreateNestedManyWithoutUsersInput } from "./AuditLogCreateNestedManyWithoutUsersInput";
+import { NotificationCreateNestedManyWithoutUsersInput } from "./NotificationCreateNestedManyWithoutUsersInput";
+
+export type UserCreateInput = {
+  firstName?: string | null;
+  lastName?: string | null;
+  username: string;
+  email?: string | null;
+  password: string;
+  roles: InputJsonValue;
+  phoneNumber?: string | null;
+  lastLogin?: Date | null;
+  isActive?: boolean | null;
+  profilePicture?: InputJsonValue;
+  twoFactorEnabled?: boolean | null;
+  preferredLanguage?: string | null;
+  timezone?: string | null;
+  userProfiles?: UserProfileCreateNestedManyWithoutUsersInput;
+  userSessions?: UserSessionCreateNestedManyWithoutUsersInput;
+  userRoles?: UserRoleCreateNestedManyWithoutUsersInput;
+  webSockets?: WebSocketCreateNestedManyWithoutUsersInput;
+  apiKeys?: ApiKeyCreateNestedManyWithoutUsersInput;
+  subscriptions?: SubscriptionCreateNestedManyWithoutUsersInput;
+  analyticsEvents?: AnalyticsEventCreateNestedManyWithoutUsersInput;
+  auditLogs?: AuditLogCreateNestedManyWithoutUsersInput;
+  notifications?: NotificationCreateNestedManyWithoutUsersInput;
+};
