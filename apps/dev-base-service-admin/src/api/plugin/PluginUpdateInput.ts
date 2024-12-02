@@ -1,0 +1,36 @@
+import { InputJsonValue } from "../../types";
+
+export type PluginUpdateInput = {
+  version?: number | null;
+  description?: string | null;
+  entryPoint?: string | null;
+  configField?: InputJsonValue;
+  isActive?: boolean | null;
+  installedAt?: Date | null;
+  name?: string | null;
+  pluginVersion?: number | null;
+  configuration?: InputJsonValue;
+  updatedOn?: Date | null;
+  pluginEntryPoint?: string | null;
+  pluginConfiguration?: InputJsonValue;
+  pluginIsActive?: boolean | null;
+  pluginName?: string | null;
+  pluginDescription?: string | null;
+  pluginInstalledAt?: Date | null;
+  pluginUpdatedAt?: Date | null;
+  pluginDesc?: string | null;
+  pluginInstalled?: Date | null;
+  pluginVer?: number | null;
+  pluginEntry?: string | null;
+  pluginConf?: InputJsonValue;
+  pluginActive?: boolean | null;
+  pluginUpdated?: Date | null;
+  pluginVerField?: number | null;
+  pluginDescField?: string | null;
+  pluginEntryField?: string | null;
+  pluginConfField?: InputJsonValue;
+  pluginInstalledField?: Date | null;
+  pluginActiveField?: boolean | null;
+  pluginUpdatedField?: Date | null;
+  pluginNameField?: string | null;
+};
